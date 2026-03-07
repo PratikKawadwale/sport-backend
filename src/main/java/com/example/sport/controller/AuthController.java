@@ -3,6 +3,7 @@ package com.example.sport.controller;
 import com.example.sport.model.User;
 import com.example.sport.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,17 +14,28 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    // Register API
     @PostMapping("/register")
-    public User register(@RequestBody User user){
-        return userRepository.save(user);
+    public ResponseEntity<?> register(@RequestBody User user) {
+
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.ok(savedUser);
     }
 
+    // Login API
     @PostMapping("/login")
-    public User login(@RequestBody User user){
-        User u = userRepository.findByEmail(user.getEmail());
-        if(u != null && u.getPassword().equals(user.getPassword())){
-            return u;
+    public ResponseEntity<?> login(@RequestBody User user) {
+
+        User u = userRepository.findByEmailAndPasswordAndRole(
+                user.getEmail(),
+                user.getPassword(),
+                user.getRole()
+        );
+
+        if (u != null) {
+            return ResponseEntity.ok(u);   // Login Success
         }
-        return null;
+
+        return ResponseEntity.status(401).body("Invalid email, password or role");
     }
 }
