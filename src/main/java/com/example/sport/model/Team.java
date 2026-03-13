@@ -16,4 +16,6 @@ public class Team {
     private String sport;
 
     private String coachName;
+
+    private java.util.List<Player> players = new java.util.ArrayList<>();
 }

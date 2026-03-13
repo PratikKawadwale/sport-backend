@@ -29,4 +29,28 @@ public class TeamController {
 
         return ResponseEntity.ok(teamRepository.findAll());
     }
+
+    // Delete Team API
+    @DeleteMapping("/teams/{id}")
+    public ResponseEntity<?> deleteTeam(@PathVariable String id) {
+        teamRepository.deleteById(id);
+        return ResponseEntity.ok("Team deleted successfully");
+    }
+
+    // Add Player to Team API
+    @PostMapping("/teams/{teamId}/addPlayer")
+    public ResponseEntity<?> addPlayer(@PathVariable String teamId, @RequestBody com.example.sport.model.Player player) {
+        java.util.Optional<Team> teamOptional = teamRepository.findById(teamId);
+        if (teamOptional.isPresent()) {
+            Team team = teamOptional.get();
+            if (team.getPlayers() == null) {
+                team.setPlayers(new java.util.ArrayList<>());
+            }
+            team.getPlayers().add(player);
+            teamRepository.save(team);
+            return ResponseEntity.ok(team);
+        } else {
+            return ResponseEntity.status(404).body("Team not found");
+        }
+    }
 }
