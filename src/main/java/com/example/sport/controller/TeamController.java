@@ -53,4 +53,21 @@ public class TeamController {
             return ResponseEntity.status(404).body("Team not found");
         }
     }
+
+    // Delete Player from Team API
+    @DeleteMapping("/teams/{teamId}/players/{playerName}")
+    public ResponseEntity<?> deletePlayer(@PathVariable String teamId, @PathVariable String playerName) {
+        java.util.Optional<Team> teamOptional = teamRepository.findById(teamId);
+        if (teamOptional.isPresent()) {
+            Team team = teamOptional.get();
+            if (team.getPlayers() != null) {
+                team.getPlayers().removeIf(p -> p.getPlayerName().equals(playerName));
+                teamRepository.save(team);
+                return ResponseEntity.ok(team);
+            }
+            return ResponseEntity.ok(team);
+        } else {
+            return ResponseEntity.status(404).body("Team not found");
+        }
+    }
 }
