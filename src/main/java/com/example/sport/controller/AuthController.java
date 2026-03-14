@@ -38,4 +38,24 @@ public class AuthController {
 
         return ResponseEntity.status(401).body("Invalid email, password or role");
     }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody User user) {
+        return userRepository.findById(id).map(existingUser -> {
+            existingUser.setName(user.getName());
+            existingUser.setPhone(user.getPhone());
+            existingUser.setDob(user.getDob());
+            existingUser.setDepartment(user.getDepartment());
+            existingUser.setAddress(user.getAddress());
+            existingUser.setBloodGroup(user.getBloodGroup());
+            // Role and Email usually stay same
+            User updated = userRepository.save(existingUser);
+            return ResponseEntity.ok(updated);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<java.util.List<User>> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
+    }
 }

@@ -16,4 +16,7 @@ public class Match {
     private String time;
     private String venue;
     private String status; // Scheduled, Ongoing, Completed
+    private int scoreA;
+    private int scoreB;
+    private String winner;
 }

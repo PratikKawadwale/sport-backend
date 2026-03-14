@@ -14,4 +14,10 @@ public class User {
     private String email;
     private String password;
     private String role;
+    private String phone;
+    private String dob;
+    private String department;
+    private String enrollmentNo;
+    private String address;
+    private String bloodGroup;
 }
